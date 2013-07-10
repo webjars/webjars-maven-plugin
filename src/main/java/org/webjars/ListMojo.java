@@ -22,15 +22,16 @@ public class ListMojo extends AbstractMojo {
   public void execute() throws MojoExecutionException {
     Multimap<String, String> artifacts = MavenCentral.getArtifacts(null, null);
 
+    StringBuilder sb = new StringBuilder("Found the following artifacts in Maven Central:\n");
     for (String artifact : artifacts.keySet()) {
       if (webjar == null || artifact.contains(webjar)) {
-        StringBuilder sb = new StringBuilder("[");
+        sb.append(artifact).append(" [");
         for (String version : artifacts.get(artifact)) {
           sb.append(" ").append(version).append(" ");
         }
-        sb.append("]");
-        getLog().info(artifact + " " + sb);
+        sb.append("]\n");
       }
     }
+    getLog().info(sb);
   }
 }
