@@ -26,7 +26,13 @@ public class MavenCentral {
     Multimap<String, String> artifacts = TreeMultimap.create();
     for (JsonElement doc : docs) {
       JsonObject gav = doc.getAsJsonObject();
-      artifacts.put(gav.get("a").getAsString(), gav.get("v").getAsString());
+      String artifactId = gav.get("a").getAsString();
+
+      if (artifactId.startsWith("webjars-")) {
+        continue;
+      }
+
+      artifacts.put(artifactId, gav.get("v").getAsString());
     }
 
     return artifacts;
