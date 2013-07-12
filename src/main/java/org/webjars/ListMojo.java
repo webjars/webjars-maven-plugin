@@ -22,9 +22,12 @@ public class ListMojo extends AbstractMojo {
   public void execute() throws MojoExecutionException {
     Multimap<String, String> artifacts = MavenCentral.getArtifacts(null, null);
 
+    boolean hasResults = false;
+
     StringBuilder sb = new StringBuilder("Found the following artifacts in Maven Central:\n");
     for (String artifact : artifacts.keySet()) {
       if (webjar == null || artifact.contains(webjar)) {
+        hasResults = true;
         sb.append(artifact).append(" [");
         for (String version : artifacts.get(artifact)) {
           sb.append(" ").append(version).append(" ");
@@ -32,6 +35,11 @@ public class ListMojo extends AbstractMojo {
         sb.append("]\n");
       }
     }
-    getLog().info(sb);
+
+    if (hasResults) {
+      getLog().info(sb);
+    } else {
+      getLog().error("No WebJars were found!");
+    }
   }
 }

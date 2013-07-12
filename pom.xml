@@ -1,24 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.webjars</groupId>
-  <artifactId>webjars-maven-plugin</artifactId>
-  <packaging>maven-plugin</packaging>
-  <version>1.0.0-SNAPSHOT</version>
-  <name>webjars-maven-plugin Maven Mojo</name>
-  <description>Manage WebJars from the command line.</description>
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent>
-  <developers>
-    <developer>
-      <id>moandji.ezana</id>
-      <name>Moandji Ezana</name>
-      <email>mwanji@gmail.com</email>
-    </developer>
-  </developers>
+  <groupId>org.webjars</groupId>
+  <artifactId>webjars-maven-plugin</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>maven-plugin</packaging>
+  <name>webjars-maven-plugin Maven Mojo</name>
+  <description>Manage WebJars from the command line.</description>
   <licenses>
     <license>
       <name>Apache v2.0 License</name>
@@ -26,6 +20,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  <developers>
+    <developer>
+      <id>moandji.ezana</id>
+      <name>Moandji Ezana</name>
+      <email>mwanji@gmail.com</email>
+    </developer>
+  </developers>
   <scm>
     <connection>scm:git:https://github.com/webjars/webjars-maven-plugin.git</connection>
     <developerConnection>scm:git:https://github.com/webjars/webjars-maven-plugin.git</developerConnection>
@@ -79,13 +80,8 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.2</version>
-        <configuration>
-          <goalPrefix>webjars</goalPrefix>
-          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-        </configuration>
         <executions>
           <execution>
             <id>mojo-descriptor</id>
@@ -100,9 +96,12 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <goalPrefix>webjars</goalPrefix>
+          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+        </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
