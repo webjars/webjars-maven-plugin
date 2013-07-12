@@ -11,9 +11,12 @@ import com.google.gson.JsonObject;
 
 import java.util.Comparator;
 
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+
 public class MavenCentral {
 
-  public static Multimap<String, String> getArtifacts(String artifact, String version) {
+  public static Multimap<String, ArtifactVersion> getArtifacts(String artifact, ArtifactVersion version) {
     String query = "g:\"org.webjars\"";
     if (artifact != null) {
       query += " AND a:\"" + artifact + "\"";
@@ -26,9 +29,9 @@ public class MavenCentral {
     JsonObject json = new Gson().fromJson(req.body(), JsonObject.class);
 
     JsonArray docs = json.getAsJsonObject("response").getAsJsonArray("docs");
-    Multimap<String, String> artifacts = TreeMultimap.create(Ordering.natural(), new Comparator<String>() {
-      public int compare(String o1, String o2) {
-        return o2.compareTo(o1);
+    Multimap<String, ArtifactVersion> artifacts = TreeMultimap.create(Ordering.natural(), new Comparator<ArtifactVersion>() {
+      public int compare(ArtifactVersion version1, ArtifactVersion version2) {
+        return version2.compareTo(version1);
       }
     });
 
@@ -40,7 +43,7 @@ public class MavenCentral {
         continue;
       }
 
-      artifacts.put(artifactId, gav.get("v").getAsString());
+      artifacts.put(artifactId, new DefaultArtifactVersion(gav.get("v").getAsString()));
     }
 
     return artifacts;

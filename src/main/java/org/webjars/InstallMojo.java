@@ -3,6 +3,8 @@ package org.webjars;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.plugin.AbstractMojo;
@@ -36,21 +38,21 @@ public class InstallMojo extends AbstractMojo {
   public void execute() throws MojoExecutionException, MojoFailureException {
     String[] split = webjar.split(":");
     String artifact = split[0];
-    String requestedVersion = split.length >= 2 ? split[1] : null;
+    ArtifactVersion requestedVersion = split.length >= 2 ? new DefaultArtifactVersion(split[1]) : null;
 
-    Collection<String> versions = MavenCentral.getArtifacts(artifact, requestedVersion).get(artifact);
+    Collection<ArtifactVersion> versions = MavenCentral.getArtifacts(artifact, requestedVersion).get(artifact);
 
     if (versions.isEmpty()) {
       getLog().error("No WebJar found matching " + artifact + (requestedVersion != null ? ":" + requestedVersion : ""));
       return;
     }
 
-    String foundVersion = null;
+    ArtifactVersion foundVersion = null;
 
     if (requestedVersion == null) {
       foundVersion = versions.iterator().next();
     } else {
-      for (String artifactVersion : versions) {
+      for (ArtifactVersion artifactVersion : versions) {
         if (artifactVersion.equals(requestedVersion)) {
           foundVersion = artifactVersion;
           break;
@@ -61,7 +63,7 @@ public class InstallMojo extends AbstractMojo {
     Dependency dependency = new Dependency();
     dependency.setGroupId("org.webjars");
     dependency.setArtifactId(artifact);
-    dependency.setVersion(foundVersion);
+    dependency.setVersion(foundVersion.toString());
 
     project.getOriginalModel().addDependency(dependency);
     try {

@@ -2,6 +2,7 @@ package org.webjars;
 
 import com.google.common.collect.Multimap;
 
+import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -20,7 +21,7 @@ public class ListMojo extends AbstractMojo {
   private String webjar;
 
   public void execute() throws MojoExecutionException {
-    Multimap<String, String> artifacts = MavenCentral.getArtifacts(null, null);
+    Multimap<String, ArtifactVersion> artifacts = MavenCentral.getArtifacts(null, null);
 
     boolean hasResults = false;
 
@@ -29,7 +30,7 @@ public class ListMojo extends AbstractMojo {
       if (webjar == null || artifact.contains(webjar)) {
         hasResults = true;
         sb.append(artifact).append(" [");
-        for (String version : artifacts.get(artifact)) {
+        for (ArtifactVersion version : artifacts.get(artifact)) {
           sb.append(" ").append(version).append(" ");
         }
         sb.append("]\n");
