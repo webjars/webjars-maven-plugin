@@ -2,6 +2,7 @@ package org.webjars;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
@@ -60,6 +61,22 @@ public class InstallMojo extends AbstractMojo {
     dependency.setArtifactId(artifact);
     dependency.setVersion(resolvedVersion.toString());
 
+    Dependency updatedDependency = null;
+
+    Iterator<Dependency> existingDependencies = project.getOriginalModel().getDependencies().iterator();
+    while (existingDependencies.hasNext()) {
+      Dependency existingDependency = existingDependencies.next();
+      if (existingDependency.getGroupId().equals(dependency.getGroupId()) && existingDependency.getArtifactId().equals(dependency.getArtifactId())) {
+        if (existingDependency.getVersion().equals(dependency.getVersion())) {
+          getLog().warn(artifact + ":" + dependency.getVersion() + " is already a dependency. Aborting.");
+          return;
+        }
+        updatedDependency = existingDependency;
+        existingDependencies.remove();
+        break;
+      }
+    }
+
     project.getOriginalModel().addDependency(dependency);
     try {
       modelWriter.write(project.getFile(), null, project.getOriginalModel());
@@ -67,7 +84,11 @@ public class InstallMojo extends AbstractMojo {
       throw new MojoExecutionException("Could not add dependency", e);
     }
 
-    getLog().info("Added dependency: " + artifact + ":" + resolvedVersion);
+    if (updatedDependency != null) {
+      getLog().info("Updated " + artifact + " from " + updatedDependency.getVersion() + " to " + resolvedVersion);
+    } else {
+      getLog().info("Added dependency: " + artifact + ":" + resolvedVersion);
+    }
   }
 
 }
