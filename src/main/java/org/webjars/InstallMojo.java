@@ -40,21 +40,16 @@ public class InstallMojo extends AbstractMojo {
     String artifact = split[0];
     ArtifactVersion requestedVersion = split.length >= 2 ? new DefaultArtifactVersion(split[1]) : null;
 
-    Collection<ArtifactVersion> versions = MavenCentral.getArtifacts(artifact, requestedVersion).get(artifact);
+    Collection<ArtifactVersion> versions = MavenCentral.getArtifacts(artifact, requestedVersion, getLog()).get(artifact);
 
-    if (versions.isEmpty()) {
-      getLog().error("No WebJar found matching " + artifact + (requestedVersion != null ? ":" + requestedVersion : ""));
-      return;
-    }
-
-    ArtifactVersion foundVersion = null;
+    ArtifactVersion resolvedVersion = null;
 
     if (requestedVersion == null) {
-      foundVersion = versions.iterator().next();
+      resolvedVersion = versions.iterator().next();
     } else {
       for (ArtifactVersion artifactVersion : versions) {
         if (artifactVersion.equals(requestedVersion)) {
-          foundVersion = artifactVersion;
+          resolvedVersion = artifactVersion;
           break;
         }
       }
@@ -63,7 +58,7 @@ public class InstallMojo extends AbstractMojo {
     Dependency dependency = new Dependency();
     dependency.setGroupId("org.webjars");
     dependency.setArtifactId(artifact);
-    dependency.setVersion(foundVersion.toString());
+    dependency.setVersion(resolvedVersion.toString());
 
     project.getOriginalModel().addDependency(dependency);
     try {
@@ -72,7 +67,7 @@ public class InstallMojo extends AbstractMojo {
       throw new MojoExecutionException("Could not add dependency", e);
     }
 
-    getLog().info("Added dependency: " + artifact + ":" + foundVersion);
+    getLog().info("Added dependency: " + artifact + ":" + resolvedVersion);
   }
 
 }

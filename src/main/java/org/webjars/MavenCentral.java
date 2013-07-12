@@ -13,10 +13,12 @@ import java.util.Comparator;
 
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 
 public class MavenCentral {
 
-  public static Multimap<String, ArtifactVersion> getArtifacts(String artifact, ArtifactVersion version) {
+  public static Multimap<String, ArtifactVersion> getArtifacts(String artifact, ArtifactVersion version, Log log) throws MojoFailureException {
     String query = "g:\"org.webjars\"";
     if (artifact != null) {
       query += " AND a:\"" + artifact + "\"";
@@ -46,6 +48,17 @@ public class MavenCentral {
       artifacts.put(artifactId, new DefaultArtifactVersion(gav.get("v").getAsString()));
     }
 
+    if (artifacts.isEmpty()) {
+      reportNoWebJarsFound(artifact, version, log);
+    }
+
     return artifacts;
+  }
+
+  public static void reportNoWebJarsFound(String artifact, ArtifactVersion version, Log log) throws MojoFailureException {
+    String errorMessage = "No WebJar found matching " + artifact + (version != null ? ":" + version : "");
+    log.error(errorMessage);
+
+    throw new MojoFailureException(errorMessage);
   }
 }
