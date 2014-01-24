@@ -1,6 +1,8 @@
 package org.webjars;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -34,14 +36,24 @@ public class WebJars {
     }
 
     StringBuilder sb = new StringBuilder("Found the following artifacts in Maven Central:\n");
-    for (String artifact : artifacts.keySet()) {
-      if (webjar == null || artifact.contains(webjar)) {
-        sb.append(artifact).append(" [");
-        for (ArtifactVersion version : artifacts.get(artifact)) {
-          sb.append(" ").append(version).append(" ");
-        }
-        sb.append("]\n");
+
+    Set<String> artifactNames = artifacts.keySet();
+    if (artifacts.containsKey(webjar)) {
+      artifactNames = new TreeSet<String>(artifacts.keySet());
+      artifactNames.remove(webjar);
+      sb.append(webjar).append(" [");
+      for (ArtifactVersion version : artifacts.get(webjar)) {
+        sb.append(" ").append(version).append(" ");
       }
+      sb.append("]\n");
+    }
+
+    for (String artifact : artifactNames) {
+      sb.append(artifact).append(" [");
+      for (ArtifactVersion version : artifacts.get(artifact)) {
+        sb.append(" ").append(version).append(" ");
+      }
+      sb.append("]\n");
     }
 
     log.info(sb);
