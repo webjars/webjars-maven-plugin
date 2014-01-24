@@ -3,6 +3,7 @@ package org.webjars;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
@@ -47,8 +48,12 @@ public class WebJarsTest {
   }
 
   @Test
-  public void should_list_all_when_no_filter() throws Exception {
-    Multimap<String, ArtifactVersion> artifacts = new WebJars(getLogger()).list(null);
+  public void should_not_throw_npe_when_list_is_called_without_a_filter() {
+    try {
+      new WebJars(getLogger()).list(null);
+    } catch (NullPointerException e) {
+      fail();
+    }
   }
 
   private Iterator<String> getLogs() {
