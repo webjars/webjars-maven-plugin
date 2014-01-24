@@ -78,6 +78,6 @@ public class WebJars {
     log.info("install <webJar>\n\tAdds the given WebJar to the project's dependencies or updates an existing dependency.");
     log.info("\tMust be used from a Maven project directory.");
     log.info("\tThe required parameter specifies which WebJar to install.");
-    log.info("\tThe format is: <name>[<version>]. If there is no version, the latest version is used.");
+    log.info("\tThe format is: <name>[:<version>]. If there is no version, the latest version is used.");
   }
 }
