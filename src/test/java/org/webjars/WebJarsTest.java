@@ -21,8 +21,7 @@ public class WebJarsTest {
   public void should_put_exact_match_first() throws Exception {
     Multimap<String, ArtifactVersion> artifacts = new WebJars(getLogger()).list("bootstrap");
 
-    Iterator<String> logIterator = Splitter.on('\n').split(log).iterator();
-    logIterator.next();
+    Iterator<String> logIterator = getLogs();
     String logL = logIterator.next();
     Iterator<String> artifactsIterator = artifacts.keySet().iterator();
     artifactsIterator.next();
@@ -36,8 +35,7 @@ public class WebJarsTest {
   public void should_sort_alphabetically_if_no_exact_match() throws Exception {
     Multimap<String, ArtifactVersion> artifacts = new WebJars(getLogger()).list("bootstra");
 
-    Iterator<String> logIterator = Splitter.on('\n').split(log).iterator();
-    logIterator.next();
+    Iterator<String> logIterator = getLogs();
     String logL = logIterator.next();
     Iterator<String> artifactsIterator = artifacts.keySet().iterator();
     String firstArtifact = artifactsIterator.next();
@@ -46,6 +44,17 @@ public class WebJarsTest {
     assertEquals("angular-ui-bootstrap", firstArtifact);
     assertEquals("bootstrap", secondArtifact);
     assertThat(logL, startsWith("angular-ui-bootstrap ["));
+  }
+
+  @Test
+  public void should_list_all_when_no_filter() throws Exception {
+    Multimap<String, ArtifactVersion> artifacts = new WebJars(getLogger()).list(null);
+  }
+
+  private Iterator<String> getLogs() {
+    Iterator<String> logIterator = Splitter.on('\n').split(log).iterator();
+    logIterator.next();
+    return logIterator;
   }
 
   private SystemStreamLog getLogger() {

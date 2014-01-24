@@ -38,7 +38,7 @@ public class WebJars {
     StringBuilder sb = new StringBuilder("Found the following artifacts in Maven Central:\n");
 
     Set<String> artifactNames = artifacts.keySet();
-    if (artifacts.containsKey(webjar)) {
+    if (webjar != null && artifacts.containsKey(webjar)) {
       artifactNames = new TreeSet<String>(artifacts.keySet());
       artifactNames.remove(webjar);
       sb.append(webjar).append(" [");
