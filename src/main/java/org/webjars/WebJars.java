@@ -1,15 +1,15 @@
 package org.webjars;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-
 import java.util.Map;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.plugin.logging.Log;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 public class WebJars {
 
@@ -66,6 +66,6 @@ public class WebJars {
     log.info("install <webJar>\n\tAdds the given WebJar to the project's dependencies or updates an existing dependency.");
     log.info("\tMust be used from a Maven project directory.");
     log.info("\tThe required parameter specifies which WebJar to install.");
-    log.info("\tThe format is: <name>[:<version]. If there is no version, the latest version is used.");
+    log.info("\tThe format is: <name>[<version>]. If there is no version, the latest version is used.");
   }
 }
