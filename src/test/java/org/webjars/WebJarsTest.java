@@ -3,6 +3,7 @@ package org.webjars;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
@@ -21,8 +22,7 @@ public class WebJarsTest {
   public void should_put_exact_match_first() throws Exception {
     Multimap<String, ArtifactVersion> artifacts = new WebJars(getLogger()).list("bootstrap");
 
-    Iterator<String> logIterator = Splitter.on('\n').split(log).iterator();
-    logIterator.next();
+    Iterator<String> logIterator = getLogs();
     String logL = logIterator.next();
     Iterator<String> artifactsIterator = artifacts.keySet().iterator();
     artifactsIterator.next();
@@ -36,8 +36,7 @@ public class WebJarsTest {
   public void should_sort_alphabetically_if_no_exact_match() throws Exception {
     Multimap<String, ArtifactVersion> artifacts = new WebJars(getLogger()).list("bootstra");
 
-    Iterator<String> logIterator = Splitter.on('\n').split(log).iterator();
-    logIterator.next();
+    Iterator<String> logIterator = getLogs();
     String logL = logIterator.next();
     Iterator<String> artifactsIterator = artifacts.keySet().iterator();
     String firstArtifact = artifactsIterator.next();
@@ -46,6 +45,21 @@ public class WebJarsTest {
     assertEquals("angular-ui-bootstrap", firstArtifact);
     assertEquals("bootstrap", secondArtifact);
     assertThat(logL, startsWith("angular-ui-bootstrap ["));
+  }
+
+  @Test
+  public void should_not_throw_npe_when_list_is_called_without_a_filter() {
+    try {
+      new WebJars(getLogger()).list(null);
+    } catch (NullPointerException e) {
+      fail();
+    }
+  }
+
+  private Iterator<String> getLogs() {
+    Iterator<String> logIterator = Splitter.on('\n').split(log).iterator();
+    logIterator.next();
+    return logIterator;
   }
 
   private SystemStreamLog getLogger() {
