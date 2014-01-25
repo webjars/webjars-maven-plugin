@@ -6,7 +6,7 @@ public class WebJarsCommandLine {
 
   public static void main(String[] args) {
     SystemStreamLog log = new SystemStreamLog();
-    String command = args[0];
+    String command = args.length > 0 ? args[0] : "help";
     WebJars webJars = new WebJars(log);
 
     if ("list".equals(command)) {
