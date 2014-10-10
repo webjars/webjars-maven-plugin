@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.webjars</groupId>
   <artifactId>webjars-maven-plugin</artifactId>
-  <version>0.2.0</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>webjars-maven-plugin Maven Mojo</name>
   <description>Manage WebJars from the command line.</description>
