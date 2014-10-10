@@ -1,5 +1,11 @@
 package org.webjars;
 
+import java.util.Comparator;
+
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.plugin.logging.Log;
+
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
@@ -8,12 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.util.Comparator;
-
-import org.apache.maven.artifact.versioning.ArtifactVersion;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.apache.maven.plugin.logging.Log;
 
 public class MavenCentral {
 
@@ -26,7 +26,7 @@ public class MavenCentral {
       query += " AND v:\"" + version + "\"";
     }
 
-    HttpRequest req = HttpRequest.get("http://search.maven.org/solrsearch/select", true, "q", query, "core", "gav", "rows", 500, "wt", "json");
+    HttpRequest req = HttpRequest.get("http://search.maven.org/solrsearch/select", true, "q", query, "core", "gav", "rows", 5000, "wt", "json");
     JsonObject json = new Gson().fromJson(req.body(), JsonObject.class);
 
     JsonArray docs = json.getAsJsonObject("response").getAsJsonArray("docs");
